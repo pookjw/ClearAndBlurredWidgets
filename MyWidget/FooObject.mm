@@ -23,15 +23,15 @@
 
 - (instancetype)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
-        _activityDescriptors = [[coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSWidgetDescriptor"), nil] forKey:@"activityDescriptors"] retain];
-        _controlDescriptors = [[coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSControlDescriptor"), nil] forKey:@"controlDescriptors"] retain];
-        _widgetDescriptors = [[coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSWidgetDescriptor"), nil] forKey:@"widgetDescriptors"] retain];
+        NSArray *activityDescriptors = [coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSWidgetDescriptor"), nil] forKey:@"activityDescriptors"];
+        NSArray *controlDescriptors = [coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSControlDescriptor"), nil] forKey:@"controlDescriptors"];
+        NSArray *widgetDescriptors = [coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSWidgetDescriptor"), nil] forKey:@"widgetDescriptors"];
         
         //
         
-        NSMutableArray *newWidgetDescriptors = [[NSMutableArray alloc] initWithCapacity:_widgetDescriptors.count];
+        NSMutableArray *newWidgetDescriptors = [[NSMutableArray alloc] initWithCapacity:widgetDescriptors.count];
         
-        for (id widgetDescriptor in _widgetDescriptors) {
+        for (id widgetDescriptor in widgetDescriptors) {
             NSString *kind = reinterpret_cast<id (*)(id, SEL)>(objc_msgSend)(widgetDescriptor, sel_registerName("kind"));
             
             if ([kind isEqualToString:@"MyClearWidget"]) {
@@ -40,23 +40,24 @@
                 reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setTransparent:"), YES);
                 reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setSupportsVibrantContent:"), YES);
                 reinterpret_cast<void (*)(id, SEL, NSUInteger)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setPreferredBackgroundStyle:"), 0x1);
-                [newWidgetDescriptors addObject:[[mutableWidgetDescriptor copy] autorelease]];
+                [newWidgetDescriptors addObject:mutableWidgetDescriptor];
                 [mutableWidgetDescriptor release];
             } else if ([kind isEqualToString:@"MyBlurWidget"]) {
                 id mutableWidgetDescriptor = [widgetDescriptor mutableCopy];
                 reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setBackgroundRemovable:"), YES);
                 reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setTransparent:"), YES);
                 reinterpret_cast<void (*)(id, SEL, NSUInteger)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setPreferredBackgroundStyle:"), 0x2);
-                [newWidgetDescriptors addObject:[[mutableWidgetDescriptor copy] autorelease]];
+                [newWidgetDescriptors addObject:mutableWidgetDescriptor];
                 [mutableWidgetDescriptor release];
             } else {
                 [newWidgetDescriptors addObject:widgetDescriptor];
             }
         }
         
-        [_widgetDescriptors release];
         _widgetDescriptors = [newWidgetDescriptors copy];
         [newWidgetDescriptors release];
+        _controlDescriptors = [controlDescriptors retain];
+        _activityDescriptors = [activityDescriptors retain];
     }
     
     return self;
@@ -95,10 +96,12 @@ namespace custom_ExportedObject {
                 NSKeyedUnarchiver *unarchiver_1 = [[NSKeyedUnarchiver alloc] initForReadingFromData:encodedData_1 error:&error];
                 if (error != nil) {
                     completion(fetchResult_1);
+                    [unarchiver_1 release];
                     return;
                 }
                 
                 MyDescriptorFetchResult *fetchResult_2 = [[MyDescriptorFetchResult alloc] initWithCoder:unarchiver_1];
+                [unarchiver_1 release];
                 
                 NSKeyedArchiver *archiver_2 = [[NSKeyedArchiver alloc] initRequiringSecureCoding:YES];
                 [fetchResult_2 encodeWithCoder:archiver_2];
@@ -110,6 +113,7 @@ namespace custom_ExportedObject {
                 
                 NSKeyedUnarchiver *unarchiver_3 = [[NSKeyedUnarchiver alloc] initForReadingFromData:encodedData_2 error:&error];
                 if (error != nil) {
+                    [unarchiver_3 release];
                     completion(fetchResult_1);
                     return;
                 }
