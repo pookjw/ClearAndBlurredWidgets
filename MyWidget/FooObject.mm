@@ -38,7 +38,6 @@
                 id mutableWidgetDescriptor = [widgetDescriptor mutableCopy];
                 reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setBackgroundRemovable:"), YES);
                 reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setTransparent:"), YES);
-                reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setSupportsVibrantContent:"), YES);
                 reinterpret_cast<void (*)(id, SEL, NSUInteger)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setPreferredBackgroundStyle:"), 0x1);
                 [newWidgetDescriptors addObject:mutableWidgetDescriptor];
                 [mutableWidgetDescriptor release];
@@ -46,6 +45,7 @@
                 id mutableWidgetDescriptor = [widgetDescriptor mutableCopy];
                 reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setBackgroundRemovable:"), YES);
                 reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setTransparent:"), YES);
+                reinterpret_cast<void (*)(id, SEL, BOOL)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setSupportsVibrantContent:"), YES);
                 reinterpret_cast<void (*)(id, SEL, NSUInteger)>(objc_msgSend)(mutableWidgetDescriptor, sel_registerName("setPreferredBackgroundStyle:"), 0x2);
                 [newWidgetDescriptors addObject:mutableWidgetDescriptor];
                 [mutableWidgetDescriptor release];
