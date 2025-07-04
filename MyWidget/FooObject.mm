@@ -23,7 +23,7 @@
 
 - (instancetype)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
-        NSArray *activityDescriptors = [coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSWidgetDescriptor"), nil] forKey:@"activityDescriptors"];
+        NSArray *activityDescriptors = [coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSBaseDescriptor"), nil] forKey:@"activityDescriptors"];
         NSArray *controlDescriptors = [coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSControlDescriptor"), nil] forKey:@"controlDescriptors"];
         NSArray *widgetDescriptors = [coder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, objc_lookUpClass("CHSWidgetDescriptor"), nil] forKey:@"widgetDescriptors"];
         
